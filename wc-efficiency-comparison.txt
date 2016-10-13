@@ -1,0 +1,50 @@
+my wc.py
+$ python efficiency_tester.py testinputs
+Testcase	RealTime	CPUTime
+test1.txt	0m0.024s	0m0.021s
+test2.txt	0m0.026s	0m0.024s
+test3.txt	0m0.030s	0m0.026s
+test4.txt	0m0.027s	0m0.024s
+$ python efficiency_tester.py testinputs
+test1.txt	0m0.025s	0m0.022s
+test2.txt	0m0.022s	0m0.021s
+test3.txt	0m0.028s	0m0.025s
+test4.txt	0m0.027s	0m0.024s
+$ python efficiency_tester.py testinputs
+Testcase	RealTime	CPUTime
+test1.txt	0m0.026s	0m0.023s
+test2.txt	0m0.023s	0m0.021s
+test3.txt	0m0.027s	0m0.025s
+test4.txt	0m0.028s	0m0.025s
+
+wc
+$ python efficiency_tester1.py testinputs
+Testcase	RealTime	CPUTime
+test1.txt	0m0.003s	0m0.002s
+test2.txt	0m0.002s	0m0.002s
+test3.txt	0m0.002s	0m0.002s
+test4.txt	0m0.002s	0m0.002s
+$ python efficiency_tester1.py testinputs
+test1.txt	0m0.002s	0m0.002s
+test2.txt	0m0.002s	0m0.002s
+test3.txt	0m0.002s	0m0.002s
+test4.txt	0m0.002s	0m0.002s
+$ python efficiency_tester1.py testinputs
+Testcase	RealTime	CPUTime
+test1.txt	0m0.004s	0m0.003s
+test2.txt	0m0.003s	0m0.002s
+test3.txt	0m0.002s	0m0.002s
+test4.txt	0m0.002s	0m0.002s
+
+Here are the results of efficiency test of my wc.py and the wc.
+The CPUTime of testinputs of wc is nearly 0.002s,while my wc.py is nearly 0.025s.
+It is clear that the CPUTime of my wc is ten times longer than wc.
+When searching the possible reasons on the web, I find an important theory called MapReduce,which improve the efficiency of wc. MapReduce separate the task and summarize the results,which saves much time when run the programs.
+
+
+
+
+
+
+
+
