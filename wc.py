@@ -1,3 +1,4 @@
+import argparse
 import sys
 
 def fileLine(fileName):
@@ -27,6 +28,20 @@ def fileByte(fileName):
         exit()
     return bytecount
 
+def StdinForTest():
+    oldstdin = sys.stdin
+    sys.stdin = open('./testinputs/test4.txt', 'r')
+    sys.stdin.flush()
+    lines=sys.stdin.readlines()
+    linecount=len(lines)
+    wordcount=0
+    bytecount=0
+    for line in lines:
+        words=line.split(" ")
+        wordcount+=len(words)
+        bytecount+=len(line)
+    return linecount,wordcount,bytecount
+
 def stdinLine(lines):
     linecount=len(lines)
     return linecount
@@ -44,107 +59,52 @@ def stdinByte(lines):
         bytecount+=len(line)
     return bytecount
 
-def stdin():
-    sys.stdin = open('./testinputs/test4.txt', 'r')
-    sys.stdin.flush()
-    lines=sys.stdin.readlines()
-    linecount=len(lines)
-    wordcount=0
-    bytecount=0
-    for line in lines:
-        words=line.split(" ")
-        wordcount+=len(words)
-        bytecount+=len(line)
-    return linecount,wordcount,bytecount
-
-def fileHelp():
-    print ('-- parameter information:')
-    print ('    1. '+sys.argv[0]+ ' -l' +' filename ' +'line count')
-    print ('    2. '+sys.argv[0]+ ' -w' +' filename ' +'word count')
-    print ('    3. '+sys.argv[0]+ ' -c' +' filename ' +'byte count')   
-    print ('    4. '+sys.argv[0]+ '   ' +' stdin input')
-    print ('    5. '+sys.argv[0]+ ' -help' +'  help information')
-
 def getArgs():
-    flags=[]
-    files=[]   
-    for arg in sys.argv:
-        if arg[:1]=='-':
-            if arg=='-l' or arg=='-w' or arg=='-c':
-                if not arg in flags:
-                    flags.append(arg)
-            elif arg=='-help':
-                fileHelp()
-            else:
-                print("wc: illegal option -- '%s'"%arg[1:])
-        else:
-            if arg!='wc.py':
-                files.append(arg)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-l","--lines", help="count line", action="store_true")
+    parser.add_argument("-w","--words", help="count word", action="store_true")
+    parser.add_argument("-c","--bytes", help="count byte", action="store_true")
+    parser.add_argument("files", help="filenames", nargs="*")
+    args = parser.parse_args()
+    return args
 
-    return {'flags':flags,'files':files}
-
-def getOutput(flags,line,word,byte,name=''):
-    output=''
-    if len(flags)!=0:
-        if not "-l" in flags:
+def getOutput(args,line,word,byte,filename):
+    line=str(line).rjust(8)
+    word=str(word).rjust(8)
+    byte=str(byte).rjust(8)
+    filename=str(filename)
+    if (args.lines or args.words or args.bytes)!= False:
+        if args.lines==False:
             line=''
-        if not "-w" in flags:
+        if args.words==False:
             word=''
-        if not "-c" in flags:
+        if args.bytes==False:
             byte=''
-    output=str(line).rjust(8)+str(word).rjust(8)+str(byte).rjust(8)+'  '+name
-    print (output)
-
+    print(line+word+byte+' '+filename)
+    
 if __name__ == "__main__":
+
     args=getArgs()
+
     totalLine=0
     totalWord=0
     totalByte=0
-    line=0
-    word=0
-    byte=0
-    if len(args['files'])==0:
-        if len(args['flags'])==0:
-            lines=sys.stdin.readlines()
-            getOutput(args['flags'],stdinLine(lines),stdinWord(lines),stdinByte(lines))
-        else:
-            lines=sys.stdin.readlines()
-            for arg in args['flags']:
-                if arg=='-l':
-                    line=stdinLine(lines)
-                elif arg=='-w':
-                    word=stdinWord(lines)
-                elif arg=='-c':
-                    byte=stdinByte(lines)
-            getOutput(args['flags'],line,word,byte)
-    else:
-        for file in args['files']:
-            if len(args['flags'])==0:
-                line=fileLine(file)
-                word=fileWord(file)
-                byte=fileByte(file)
-                totalLine+=line
-                totalWord+=word
-                totalByte+=byte
-            else:
-                for arg in args['flags']:
-                    if arg=='-l':
-                        line=fileLine(file)
-                        totalLine+=line
-                    if arg=='-w':
-                        word=fileWord(file)
-                        totalWord+=word
-                    if arg=='-c':
-                        byte=fileByte(file)
-                        totalByte+=byte
-            getOutput(args['flags'],line,word,byte,file)
-        if len(args['files'])>1:
-            getOutput (args['flags'],totalLine,totalWord,totalByte,"total")
-                        
 
-                
+    if args.files:
+        for n in args.files:
+            totalLine+=fileLine(n)
+            totalWord+=fileWord(n)
+            totalByte+=fileByte(n)
+            getOutput(args,fileLine(n),fileWord(n),fileByte(n),n)
+        if len(args.files)>1:
+            getOutput(args,totalLine,totalWord,totalByte,'total')
 
-
+    elif len(args.files)==0:
+        lines=sys.stdin.readlines()
+        line=stdinLine(lines)
+        word=stdinWord(lines)
+        byte=stdinByte(lines)
+        getOutput(args,stdinLine(lines),stdinWord(lines),stdinByte(lines),'')
 
 
 
