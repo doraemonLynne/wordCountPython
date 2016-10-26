@@ -28,11 +28,6 @@ def fileByte(fileName):
         exit()
     return bytecount
 
-# def LongestLine(*numbers):
-#     for n in numbers:
-#         longest=max(n)
-#     return longest
-
 def StdinForTest():
     sys.stdin = open('./testinputs/test4.txt', 'r')
     sys.stdin.flush()
@@ -65,9 +60,9 @@ def stdinByte(lines):
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-l",help="count line", action="store_true")
-    parser.add_argument("-w", help="count word", action="store_true")
-    parser.add_argument("-c", help="count byte", action="store_true")
+    parser.add_argument("-l","--lines", help="count line", action="store_true")
+    parser.add_argument("-w","--words", help="count word", action="store_true")
+    parser.add_argument("-c","--bytes", help="count byte", action="store_true")
     parser.add_argument("files", help="filenames", nargs="*")
     args = parser.parse_args()
     return args
@@ -77,12 +72,12 @@ def getOutput(args,line,word,byte,filename):
     word=str(word).rjust(8)
     byte=str(byte).rjust(8)
     filename=str(filename)
-    if (args.l or args.w or args.c)!= False:
-        if args.l==False:
+    if (args.lines or args.words or args.bytes)!= False:
+        if args.lines==False:
             line=''
-        if args.w==False:
+        if args.words==False:
             word=''
-        if args.c==False:
+        if args.bytes==False:
             byte=''
     print(line+word+byte+' '+filename)
     
